@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="JobVerse — find and apply to real remote jobs from companies hiring now.">
+    <meta property="og:title" content="JobVerse | Find Your Dream Job">
+    <meta property="og:description" content="Explore live job openings and apply directly — built for the modern job seeker.">
+    <meta property="og:type" content="website">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>%F0%9F%92%BC</text></svg>">
+    <link rel="stylesheet" href="adiii.css">
+    <title>JobVerse | Find Your Dream Job</title>
+</head>
+<body class="dark-theme">
+
+    <header>
+        <div id="navBar">
+            <div class="logo">
+                <span class="logo-text" id="logoBtn" style="cursor:pointer;"><svg class="logo-mark" width="24" height="24" viewBox="0 0 24 24"><line x1="12" y1="12" x2="12" y2="3" stroke="currentColor" stroke-width="1.6" opacity="0.55"/><line x1="12" y1="12" x2="19.5" y2="7.5" stroke="currentColor" stroke-width="1.6" opacity="0.55"/><line x1="12" y1="12" x2="19.5" y2="16.5" stroke="currentColor" stroke-width="1.6" opacity="0.55"/><line x1="12" y1="12" x2="4.5" y2="16.5" stroke="currentColor" stroke-width="1.6" opacity="0.55"/><line x1="12" y1="12" x2="4.5" y2="7.5" stroke="currentColor" stroke-width="1.6" opacity="0.55"/><circle cx="12" cy="3" r="2" fill="currentColor"/><circle cx="19.5" cy="7.5" r="2" fill="currentColor" opacity="0.75"/><circle cx="19.5" cy="16.5" r="2" fill="currentColor" opacity="0.75"/><circle cx="4.5" cy="16.5" r="2" fill="currentColor" opacity="0.75"/><circle cx="4.5" cy="7.5" r="2" fill="currentColor" opacity="0.75"/><circle cx="12" cy="12" r="2.6" fill="currentColor"/></svg>Job<span class="highlight">Verse</span></span>
+            </div>
+
+            <button class="hamburger" id="hamburgerBtn" aria-label="Toggle menu">
+                <span></span><span></span><span></span>
+            </button>
+
+            <div class="menu" id="navMenu">
+                <div class="nav-dropdown" id="jobsDropdown">
+                    <button type="button" class="menu-link dropdown-toggle active" id="jobsDropdownToggle">
+                        Jobs <span class="nav-badge" id="navNewBadge" style="display:none;"></span><span class="dropdown-caret">▾</span>
+                    </button>
+                    <div class="dropdown-menu" id="jobsDropdownMenu">
+                        <a href="#" class="menu-link dropdown-item active" data-target="home">All Jobs</a>
+                        <a href="#" class="menu-link dropdown-item" data-target="government">Government Jobs</a>
+                        <a href="#" class="menu-link dropdown-item" data-target="bluecollar">Blue-Collar Jobs</a>
+                    </div>
+                </div>
+                <a href="#" class="menu-link" data-target="companies">Companies</a>
+                <a href="#" class="menu-link" data-target="saved">Saved</a>
+                <a href="#" class="menu-link" data-target="services">Services</a>
+                <a href="#" class="menu-link" data-target="admin" id="adminNavLink" style="display:none;">🔒 Admin</a>
+            </div>
+
+            <div class="nav-right">
+                <button id="themeToggle" class="theme-btn">☀️ Light Mode</button>
+                <div class="logReg" id="logReg">
+                    <button class="login" id="loginBtn">Log In</button>
+                    <button class="register" id="signupBtn">Sign Up Free</button>
+                </div>
+                <div class="user-badge" id="userBadge" style="display:none;">
+                    <span id="userNameDisplay"></span>
+                    <button class="login" id="logoutBtn">Log Out</button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main id="mainContent">
+        <section id="homePage" class="page-section active">
+            <div class="hero">
+                <div class="hero-orbit" aria-hidden="true">
+                    <div class="ring"></div>
+                    <div class="ring ring-2"></div>
+                    <div class="ring ring-3"></div>
+                    <div class="dot dot-1"></div>
+                    <div class="dot dot-2"></div>
+                    <div class="dot dot-3"></div>
+                </div>
+                <div class="hero-content">
+                    <span class="hero-eyebrow">Live jobs, updated daily</span>
+                    <h1>Discover <span class="text-gradient">Your Dream Career</span> Here</h1>
+                    <p>Explore thousands of job opportunities with top-tier companies and take your career to the next level.</p>
+
+                    <div class="search-container">
+                        <div class="search-input">
+                            <input type="text" id="keywordInput" placeholder="Job title, keywords, or company...">
+                        </div>
+                        <div class="search-input">
+                            <input type="text" id="locationInput" placeholder="Location (e.g., Mumbai, Remote)...">
+                        </div>
+                        <button class="search-btn">Search Jobs</button>
+                    </div>
+
+                    <div class="popular-tags">
+                        <span>Popular:</span>
+                        <a href="#">Remote</a>
+                        <a href="#">Data Science</a>
+                        <a href="#">UI/UX Design</a>
+                        <a href="#">React Developer</a>
+                        <a href="#">Blue-Collar</a>
+                    </div>
+
+                    <div class="stats-bar">
+                        <div class="stat"><strong id="statJobs">—</strong><span>Live Openings</span></div>
+                        <div class="stat"><strong>50+</strong><span>Companies</span></div>
+                        <div class="stat"><strong>10k+</strong><span>Job Seekers</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="jobs-section" id="jobsSection">
+                <div class="jobs-section-header">
+                    <div>
+                        <span class="section-eyebrow">Fresh off the feed</span>
+                        <h2>Latest Openings</h2>
+                    </div>
+                    <span id="resultsCount"></span>
+                </div>
+
+                <div class="new-jobs-banner" id="newJobsBanner" style="display:none;"></div>
+
+                <div class="filters-bar">
+                    <select id="typeFilter">
+                        <option value="">All Job Types</option>
+                        <option value="Full-time">Full-time</option>
+                        <option value="Part-time">Part-time</option>
+                        <option value="Contract">Contract</option>
+                        <option value="Internship">Internship</option>
+                    </select>
+                    <select id="modeFilter">
+                        <option value="">All Work Modes</option>
+                        <option value="Remote">Remote</option>
+                        <option value="Hybrid">Hybrid</option>
+                        <option value="Onsite">Onsite</option>
+                    </select>
+                    <select id="sortSelect">
+                        <option value="relevance">Sort: Most Relevant</option>
+                        <option value="recent">Sort: Most Recent</option>
+                        <option value="title">Sort: Title A–Z</option>
+                    </select>
+                    <button class="service-try-btn" id="skillGapToggleBtn" type="button">🔍 Skill Gap Insights</button>
+                </div>
+
+                <div class="tool-panel" id="skillGapPanel">
+                    <h3>Skill Gap Insights</h3>
+                    <p class="tool-subtitle">Enter your skills — see which in-demand skills from today's live listings you're missing.</p>
+                    <div class="skill-gap-form">
+                        <input type="text" id="skillGapInput" placeholder="Your skills, comma separated (e.g. React, SQL, Figma)">
+                        <button class="auth-submit-btn" id="skillGapBtn" type="button" style="width:auto;">Analyze</button>
+                    </div>
+                    <div id="skillGapResult"></div>
+                </div>
+
+                <div class="jobs-grid" id="jobsGrid"></div>
+            </div>
+
+            <div class="testimonials-section">
+                <svg width="0" height="0" style="position:absolute;" aria-hidden="true">
+                    <symbol id="star-icon" viewBox="0 0 24 24"><path d="M12 2l2.9 6.9 7.1.6-5.4 4.7 1.6 7-6.2-4-6.2 4 1.6-7L2 9.5l7.1-.6z"/></symbol>
+                </svg>
+                <span class="section-eyebrow" style="text-align:center;">From our users</span>
+                <h2>Loved by Job Seekers</h2>
+                <div class="testimonials-grid">
+                    <div class="testimonial-card">
+                        <div class="star-rating" aria-label="5 out of 5 stars">
+                            <svg class="star filled"><use href="#star-icon"/></svg>
+                            <svg class="star filled"><use href="#star-icon"/></svg>
+                            <svg class="star filled"><use href="#star-icon"/></svg>
+                            <svg class="star filled"><use href="#star-icon"/></svg>
+                            <svg class="star filled"><use href="#star-icon"/></svg>
+                        </div>
+                        <p>"JobVerse helped me find a remote role within two weeks of searching. The filters actually save time."</p>
+                        <div class="testimonial-author">— Ananya R., UI Designer</div>
+                    </div>
+                    <div class="testimonial-card">
+                        <div class="star-rating" aria-label="5 out of 5 stars">
+                            <svg class="star filled"><use href="#star-icon"/></svg>
+                            <svg class="star filled"><use href="#star-icon"/></svg>
+                            <svg class="star filled"><use href="#star-icon"/></svg>
+                            <svg class="star filled"><use href="#star-icon"/></svg>
+                            <svg class="star filled"><use href="#star-icon"/></svg>
+                        </div>
+                        <p>"Clean interface, real listings, no clutter. Exactly what a job board should be."</p>
+                        <div class="testimonial-author">— Rohit K., Backend Developer</div>
+                    </div>
+                    <div class="testimonial-card">
+                        <div class="star-rating" aria-label="4 out of 5 stars">
+                            <svg class="star filled"><use href="#star-icon"/></svg>
+                            <svg class="star filled"><use href="#star-icon"/></svg>
+                            <svg class="star filled"><use href="#star-icon"/></svg>
+                            <svg class="star filled"><use href="#star-icon"/></svg>
+                            <svg class="star empty"><use href="#star-icon"/></svg>
+                        </div>
+                        <p>"I like being able to save roles and come back to them later instead of losing track."</p>
+                        <div class="testimonial-author">— Priya S., Data Analyst</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="governmentPage" class="page-section">
+            <div class="inner-page">
+                <span class="section-eyebrow" style="text-align:center;">Sarkari naukri</span>
+                <h2>Government Jobs</h2>
+                <p>Major recruiting bodies — "Apply Now" opens each one's real, official portal.</p>
+            </div>
+            <div class="jobs-grid" id="govtJobsGrid" style="max-width:1100px;margin:0 auto;padding:0 8% 100px;"></div>
+        </section>
+
+        <section id="bluecollarPage" class="page-section">
+            <div class="inner-page">
+                <span class="section-eyebrow" style="text-align:center;">Vocational &amp; skilled trades</span>
+                <h2>Blue-Collar Jobs</h2>
+                <p>Roles that don't need a college degree — tap 🔊 on any card to hear it read aloud.</p>
+            </div>
+            <div class="icon-categories" id="bluecollarIconCategories" style="margin-bottom:24px;">
+                <button class="icon-cat-btn" data-keyword="Electrician"><span class="icon-cat-emoji">🔌</span><span>Electrician</span></button>
+                <button class="icon-cat-btn" data-keyword="Driver"><span class="icon-cat-emoji">🚗</span><span>Driver</span></button>
+                <button class="icon-cat-btn" data-keyword="Delivery"><span class="icon-cat-emoji">📦</span><span>Delivery</span></button>
+                <button class="icon-cat-btn" data-keyword="Plumber"><span class="icon-cat-emoji">🔧</span><span>Plumber</span></button>
+                <button class="icon-cat-btn" data-keyword="Security"><span class="icon-cat-emoji">🛡️</span><span>Security</span></button>
+                <button class="icon-cat-btn" data-keyword="Cook"><span class="icon-cat-emoji">🍳</span><span>Cook</span></button>
+                <button class="icon-cat-btn" data-keyword="Beautician"><span class="icon-cat-emoji">💇</span><span>Beautician</span></button>
+                <button class="icon-cat-btn" data-keyword="Warehouse"><span class="icon-cat-emoji">📥</span><span>Warehouse</span></button>
+                <button class="icon-cat-btn" data-keyword=""><span class="icon-cat-emoji">🔎</span><span>Show All</span></button>
+            </div>
+            <div class="jobs-grid" id="bluecollarJobsGrid" style="max-width:1100px;margin:0 auto;padding:0 8% 100px;"></div>
+        </section>
+
+        <section id="companiesPage" class="page-section">
+            <div class="inner-page">
+                <span class="section-eyebrow" style="text-align:center;">Who's hiring</span>
+                <h2>Top Companies Hiring Now</h2>
+                <p>Browse profiles of companies actively hiring on JobVerse.</p>
+            </div>
+            <div class="companies-grid" id="companiesGrid"></div>
+        </section>
+
+        <section id="savedPage" class="page-section">
+            <div class="inner-page">
+                <h2>Your Saved Jobs</h2>
+                <p>Roles you've bookmarked to come back to later.</p>
+            </div>
+            <div class="jobs-grid" id="savedJobsGrid" style="max-width:1100px;margin:0 auto;padding:0 8% 100px;"></div>
+        </section>
+
+        <section id="servicesPage" class="page-section">
+            <div class="inner-page">
+                <span class="section-eyebrow" style="text-align:center;">Free toolkit</span>
+                <h2>Our Premium Services</h2>
+                <p>Accelerate your job search and stand out from the competition with our custom solutions.</p>
+
+                <div class="services-grid">
+                    <div class="service-card">
+                        <div class="service-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M9 13h6M9 17h6M9 9h1"/></svg></div>
+                        <h3>Resume Writing</h3>
+                        <p>Get a professional, ATS-friendly resume written by industry experts to land 3x more interviews.</p>
+                        <button class="service-try-btn" data-tool="resumeBuilderPanel">Try it Free →</button>
+                    </div>
+                    <div class="service-card">
+                        <div class="service-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg></div>
+                        <h3>Profile Booster</h3>
+                        <p>Check how ATS-friendly your resume is and get instant tips to improve it.</p>
+                        <button class="service-try-btn" data-tool="resumeScorePanel">Try it Free →</button>
+                    </div>
+                    <div class="service-card">
+                        <div class="service-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg></div>
+                        <h3>Interview Prep</h3>
+                        <p>Practice with real interview questions on a timer, just like the real thing.</p>
+                        <button class="service-try-btn" data-tool="interviewPrepPanel">Try it Free →</button>
+                    </div>
+                </div>
+
+                <!-- RESUME BUILDER -->
+                <div class="tool-panel" id="resumeBuilderPanel">
+                    <h3>Resume Builder</h3>
+                    <p class="tool-subtitle">Fill this in — your resume builds itself on the right, ready to print or save as PDF.</p>
+                    <div class="tool-grid">
+                        <div class="tool-form">
+                            <input type="text" id="rbName" placeholder="Full Name">
+                            <div class="tool-form-row">
+                                <input type="text" id="rbEmail" placeholder="Email">
+                                <input type="text" id="rbPhone" placeholder="Phone">
+                            </div>
+                            <textarea id="rbSummary" placeholder="Professional summary (2-3 lines)" rows="3"></textarea>
+                            <input type="text" id="rbSkills" placeholder="Skills (comma separated)">
+                            <textarea id="rbExperience" placeholder="Experience — one per line: Role @ Company (Duration) — description" rows="4"></textarea>
+                            <textarea id="rbEducation" placeholder="Education — one per line: Degree @ Institute (Year)" rows="3"></textarea>
+                            <button class="auth-submit-btn" id="rbPrintBtn" type="button">Download / Print Resume</button>
+                        </div>
+                        <div class="tool-preview-wrap" id="resumePreviewWrap">
+                            <div class="resume-preview" id="resumePreview">
+                                <p class="empty-state">Start typing to see your resume take shape.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- RESUME SCORE CHECKER -->
+                <div class="tool-panel" id="resumeScorePanel">
+                    <h3>Resume Score Checker</h3>
+                    <p class="tool-subtitle">Paste your resume text (and optionally a job description) to get an instant ATS-friendliness score.</p>
+                    <div class="tool-grid">
+                        <div class="tool-form">
+                            <textarea id="rsResumeText" placeholder="Paste your resume text here..." rows="8"></textarea>
+                            <textarea id="rsJobDesc" placeholder="Optional: paste a job description to check keyword match" rows="4"></textarea>
+                            <button class="auth-submit-btn" id="rsCheckBtn" type="button">Check My Resume</button>
+                        </div>
+                        <div class="tool-preview-wrap">
+                            <div id="resumeScoreResult" class="score-result">
+                                <p class="empty-state">Your score and tips will appear here.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- INTERVIEW PREP -->
+                <div class="tool-panel" id="interviewPrepPanel">
+                    <h3>Mock Interview Practice</h3>
+                    <p class="tool-subtitle">Pick a category, get a question, and practice answering before the timer runs out.</p>
+                    <div class="interview-controls">
+                        <select id="interviewCategory">
+                            <option value="behavioral">Behavioral</option>
+                            <option value="technical">Technical</option>
+                            <option value="hr">HR / General</option>
+                        </select>
+                        <button class="auth-submit-btn" id="getQuestionBtn" type="button" style="width:auto;">Get a Question</button>
+                    </div>
+                    <div class="interview-card" id="interviewCard">
+                        <p class="empty-state">Click "Get a Question" to start practicing.</p>
+                    </div>
+                    <div class="interview-timer-row" id="interviewTimerRow" style="display:none;">
+                        <span class="timer-display" id="timerDisplay">60s</span>
+                        <button class="login" id="startTimerBtn" type="button">Start Timer</button>
+                        <button class="login" id="showTipBtn" type="button">Show Tip</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="adminPage" class="page-section">
+            <div class="inner-page">
+                <h2>Applications Dashboard</h2>
+                <p>Visible only to the site owner — see who applied to what, and when.</p>
+            </div>
+            <div class="applications-wrap" id="applicationsList"></div>
+
+            <div class="inner-page" style="padding-top:20px;">
+                <h2>User Feedback</h2>
+                <p>Ratings and comments submitted through the feedback button.</p>
+            </div>
+            <div class="applications-wrap" id="feedbackList"></div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="footer-grid">
+            <div class="footer-col">
+                <div class="logo-text"><svg class="logo-mark" width="20" height="20" viewBox="0 0 24 24"><line x1="12" y1="12" x2="12" y2="3" stroke="currentColor" stroke-width="1.6" opacity="0.55"/><line x1="12" y1="12" x2="19.5" y2="7.5" stroke="currentColor" stroke-width="1.6" opacity="0.55"/><line x1="12" y1="12" x2="19.5" y2="16.5" stroke="currentColor" stroke-width="1.6" opacity="0.55"/><line x1="12" y1="12" x2="4.5" y2="16.5" stroke="currentColor" stroke-width="1.6" opacity="0.55"/><line x1="12" y1="12" x2="4.5" y2="7.5" stroke="currentColor" stroke-width="1.6" opacity="0.55"/><circle cx="12" cy="3" r="2" fill="currentColor"/><circle cx="19.5" cy="7.5" r="2" fill="currentColor" opacity="0.75"/><circle cx="19.5" cy="16.5" r="2" fill="currentColor" opacity="0.75"/><circle cx="4.5" cy="16.5" r="2" fill="currentColor" opacity="0.75"/><circle cx="4.5" cy="7.5" r="2" fill="currentColor" opacity="0.75"/><circle cx="12" cy="12" r="2.6" fill="currentColor"/></svg>Job<span class="highlight">Verse</span></div>
+                <p>A modern job board connecting talent with opportunity.</p>
+            </div>
+            <div class="footer-col">
+                <h4>Product</h4>
+                <a href="#" class="menu-link" data-target="home">Find Jobs</a>
+                <a href="#" class="menu-link" data-target="companies">Companies</a>
+                <a href="#" class="menu-link" data-target="services">Services</a>
+            </div>
+            <div class="footer-col">
+                <h4>Account</h4>
+                <a href="#" class="menu-link" data-target="saved">Saved Jobs</a>
+                <a href="#" id="footerLoginLink">Log In</a>
+            </div>
+        </div>
+        <p class="footer-bottom">&copy; 2026 JobVerse. Built as a college project — a front-end demo, not a live job board. A project by Aditya..!</p>
+    </footer>
+
+    <div class="modal-overlay" id="authModal">
+        <div class="modal-box">
+            <button class="close-modal" id="closeModal" aria-label="Close">&times;</button>
+
+            <form id="loginForm" class="auth-form active" novalidate>
+                <div id="login-box">
+                    <h3>Welcome back</h3>
+                    <p>Log in to continue your job search.</p>
+                    <div class="field">
+                        <input type="email" id="loginEmail" required>
+                        <label for="loginEmail">Email</label>
+                    </div>
+                    <div class="field">
+                        <input type="password" id="loginPassword" required>
+                        <label for="loginPassword">Password</label>
+                    </div>
+                    <button type="submit" class="auth-submit-btn">Log In</button>
+                    <p class="auth-switch">New here? <a id="switchToSignup">Create an account</a></p>
+                </div>
+            </form>
+
+            <form id="signupForm" class="auth-form" novalidate>
+                <div id="signUp-box">
+                    <h3>Create Account</h3>
+                    <p>Join JobVerse today and find your dream career.</p>
+                    <div class="field">
+                        <input type="text" id="signupName" required>
+                        <label for="signupName">Full Name</label>
+                    </div>
+                    <div class="field">
+                        <input type="email" id="signupEmail" required>
+                        <label for="signupEmail">Email</label>
+                    </div>
+                    <div class="field">
+                        <input type="password" id="signupPassword" required>
+                        <label for="signupPassword">Password</label>
+                    </div>
+                    <button type="submit" class="auth-submit-btn">Create Free Account</button>
+                    <p class="auth-switch">Already have an account? <a id="switchToLogin">Log in</a></p>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <button id="feedbackFab" class="feedback-fab" type="button">💬 Feedback</button>
+
+    <div class="modal-overlay" id="feedbackModal">
+        <div class="modal-box">
+            <button class="close-modal" id="closeFeedbackModal" aria-label="Close">&times;</button>
+            <h3>Rate JobVerse</h3>
+            <p class="tool-subtitle">Tell us what's working and what isn't.</p>
+            <div class="feedback-star-picker" id="feedbackStarPicker">
+                <svg class="star empty" data-value="1"><use href="#star-icon"/></svg>
+                <svg class="star empty" data-value="2"><use href="#star-icon"/></svg>
+                <svg class="star empty" data-value="3"><use href="#star-icon"/></svg>
+                <svg class="star empty" data-value="4"><use href="#star-icon"/></svg>
+                <svg class="star empty" data-value="5"><use href="#star-icon"/></svg>
+            </div>
+            <div class="field" style="margin-top:18px;">
+                <textarea id="feedbackComment" rows="4" placeholder=" " style="width:100%;padding:12px;background:var(--search-bg);border:1px solid var(--search-border);border-radius:8px;color:var(--text-color);font-family:inherit;font-size:14px;"></textarea>
+                <label style="position:static;background:none;display:block;margin-top:6px;font-size:12px;color:var(--menu-link);">What should we improve?</label>
+            </div>
+            <button class="auth-submit-btn" id="submitFeedbackBtn" type="button">Submit Feedback</button>
+        </div>
+    </div>
+
+    <!-- Firebase (free tier) — handles real signup/login + saved jobs -->
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+    <script src="firebase-config.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
