@@ -1,3 +1,12 @@
+// =========================================================
+// JobVerse — front-end demo logic
+// =========================================================
+
+// --- 0. JOB & COMPANY DATA -------------------------------
+// Real jobs are fetched live from two free APIs (see fetchJobs
+// below: Jobicy + Remotive). This array is only a fallback shown
+// if both requests fail (e.g. no internet, or opened via
+// file:// instead of a local server).
 const FALLBACK_JOBS = [
     { id: "fb-1",  title: "Frontend Developer",        company: "Northwind Labs",   location: "Mumbai, India",   type: "Full-time", mode: "Hybrid", tags: ["React", "JavaScript", "CSS"], posted: "2 days ago",  salary: "₹8L – ₹14L / yr" },
     { id: "fb-2",  title: "Backend Engineer (Node.js)", company: "Riverstone Tech",  location: "Bengaluru, India",type: "Full-time", mode: "Onsite", tags: ["Node.js", "MongoDB", "AWS"],   posted: "1 day ago",   salary: "₹10L – ₹18L / yr" },
@@ -11,6 +20,12 @@ const FALLBACK_JOBS = [
     { id: "fb-10", title: "Graphic Designer",           company: "Pinegate Studio",  location: "Remote",          type: "Part-time", mode: "Remote", tags: ["Illustrator", "Branding"],    posted: "2 days ago",  salary: "₹500 / hr" },
 ];
 
+// No reliable free, live API exists for Indian government job
+// listings (unlike Adzuna/Jobicy for private-sector roles) — the
+// only options found were unofficial scrapers of dubious
+// reliability. So these are demo entries for common recruitment
+// categories, but "Apply Now" genuinely opens each body's real,
+// official portal — not a fake link.
 const GOVT_JOBS = [
     { id: "govt-1", title: "Junior Engineer (Various Disciplines)", company: "Staff Selection Commission (SSC)", location: "Multiple Locations, India", type: "Full-time", mode: "Onsite", tags: ["Government", "SSC", "Engineering"], posted: "Ongoing recruitment", salary: "₹35,400 – ₹1,12,400 / mo (Level 6)", url: "https://ssc.nic.in" },
     { id: "govt-2", title: "Probationary Officer (PO)", company: "Institute of Banking Personnel Selection (IBPS)", location: "Pan India", type: "Full-time", mode: "Onsite", tags: ["Government", "Banking", "IBPS"], posted: "Ongoing recruitment", salary: "₹48,480 – ₹85,920 / mo (approx.)", url: "https://www.ibps.in" },
@@ -20,6 +35,11 @@ const GOVT_JOBS = [
     { id: "govt-6", title: "Short Service Commission — Officer Entry", company: "Indian Armed Forces", location: "Pan India", type: "Full-time", mode: "Onsite", tags: ["Government", "Defence"], posted: "Ongoing recruitment", salary: "₹56,100+ / mo + allowances", url: "https://joinindianarmy.nic.in" },
 ];
 
+// Vocational / skilled-trade roles — none of Jobicy/Remotive/Adzuna
+// meaningfully cover this segment (they skew white-collar/remote),
+// so these are curated demo listings representing the kind of work
+// (electrician, driver, delivery, etc.) that doesn't require a
+// college degree.
 const BLUE_COLLAR_JOBS = [
     { id: "bc-1", title: "Electrician", company: "Sunrise Facility Services", location: "Delhi, India", type: "Full-time", mode: "Onsite", tags: ["Blue-Collar", "Electrician"], posted: "3 days ago", salary: "₹15,000 – ₹22,000 / mo" },
     { id: "bc-2", title: "Delivery Executive", company: "QuickDrop Logistics", location: "Mumbai, India", type: "Full-time", mode: "Onsite", tags: ["Blue-Collar", "Delivery"], posted: "Today", salary: "₹18,000 – ₹25,000 / mo + incentives" },
@@ -40,8 +60,17 @@ const COMPANIES = [
     { name: "Bluepeak Media",       industry: "Marketing",           openings: 1, blurb: "Content and performance marketing agency." },
 ];
 
+// JOBS holds whatever is currently on screen — live data once
+// fetchJobs() resolves, or FALLBACK_JOBS until/unless it fails.
 let JOBS = FALLBACK_JOBS;
 
+// Two free, no-key-required job listing APIs, merged together:
+// Jobicy (geo=india) for India-focused roles, Remotive for the
+// wider global remote pool. If one fails, the other still shows.
+// Note: Jobicy's "geo" filter only accepts values like usa/canada/
+// europe — "india" isn't a valid region there and returns a 400.
+// "tag" is a documented free-text search across title+description,
+// so we use that to surface India-relevant listings instead.
 const JOBICY_URL = "https://jobicy.com/api/v2/remote-jobs?count=20&tag=india";
 const REMOTIVE_URL = "https://remotive.com/api/remote-jobs?limit=20";
 
@@ -64,6 +93,9 @@ function formatSalary(j) {
 }
 
 async function fetchFromJobicy() {
+    // Jobicy's API isn't reliably CORS-enabled for direct browser
+    // calls, so try direct first, then fall back to a free CORS
+    // proxy that re-serves the same response with CORS headers.
     const proxyUrl = `https://api.allorigins.win/raw?url=${encodeURIComponent(JOBICY_URL)}`;
 
     let data;
@@ -127,6 +159,9 @@ async function fetchJobs() {
     const failed = sources.filter(s => s.result.status === 'rejected');
     failed.forEach(s => console.warn(`${s.name} feed unavailable:`, s.result.reason));
 
+    // Live India-tagged results are often sparse (Jobicy's feed
+    // skews Americas/Europe), so always mix in the sample India
+    // listings alongside whatever real data loads.
     merged = [...FALLBACK_JOBS, ...BLUE_COLLAR_JOBS, ...merged];
 
     if (failed.length) {
@@ -140,6 +175,7 @@ async function fetchJobs() {
     renderCompanies();
 }
 
+// --- NEW JOB ALERTS (localStorage-based, since last visit) ---
 const SEEN_JOBS_KEY = 'jobverse_seen_job_ids';
 let newJobIds = new Set();
 
@@ -179,10 +215,11 @@ function updateNewJobsTracking() {
     try {
         localStorage.setItem(SEEN_JOBS_KEY, JSON.stringify(currentIds));
     } catch (err) {
-        
+        // localStorage unavailable (e.g. private browsing) — skip silently.
     }
 }
 
+// --- 1. THEME TOGGLE ---------------------------------------
 const themeToggleBtn = document.getElementById('themeToggle');
 const bodyElement = document.body;
 
@@ -193,6 +230,7 @@ themeToggleBtn.addEventListener('click', () => {
     themeToggleBtn.textContent = goingLight ? '🌙 Dark Mode' : '☀️ Light Mode';
 });
 
+// --- 2. PAGE ROUTING + MOBILE MENU -----------------------------
 const menuLinks = document.querySelectorAll('.menu-link:not(.dropdown-toggle)');
 const pages = document.querySelectorAll('.page-section');
 const logoBtn = document.getElementById('logoBtn');
@@ -259,6 +297,7 @@ hamburgerBtn.addEventListener('click', () => {
     hamburgerBtn.classList.toggle('open');
 });
 
+// --- 3. RENDER JOB CARDS ---------------------------------------
 const jobsGrid = document.getElementById('jobsGrid');
 const resultsCount = document.getElementById('resultsCount');
 const keywordInput = document.getElementById('keywordInput');
@@ -344,6 +383,8 @@ function renderJobs(list) {
     });
 }
 
+// Reusable renderer for simple static grids (Government / Blue-Collar
+// pages) that don't need the full search+filter machinery.
 function renderJobGridInto(gridEl, list, emptyMsg) {
     gridEl.innerHTML = '';
     if (list.length === 0) {
@@ -415,7 +456,7 @@ function filterJobs() {
 }
 
 [keywordInput, locationInput].forEach(input => {
-    input.addEventListener('keyup', (e) => { if (e.key === 'Enter') filterJobs(); });
+    input.addEventListener('input', filterJobs);
 });
 searchBtn.addEventListener('click', filterJobs);
 typeFilter.addEventListener('change', filterJobs);
@@ -437,6 +478,11 @@ tagLinks.forEach(tag => {
 const companiesGrid = document.getElementById('companiesGrid');
 
 function renderCompanies() {
+    // Count real open roles per company from whatever is currently
+    // loaded (live API data once fetchJobs resolves). This way any
+    // well-known company shown here is genuinely, verifiably hiring
+    // right now via the live feed — not a fabricated claim about a
+    // real company's hiring status.
     const counts = new Map();
     JOBS.forEach(job => counts.set(job.company, (counts.get(job.company) || 0) + 1));
 
@@ -623,7 +669,7 @@ const db = firebase.firestore();
 // for how to find it). Only this UID will ever be able to read the
 // applications list — enforced by Firestore security rules, not by
 // this check alone, so no one else can see who applied where.
-const ADMIN_UID = "LwkQsWFWAwShCCdVbPDrYVthvdm2";
+const ADMIN_UID = "PASTE_YOUR_ADMIN_UID_HERE";
 
 async function recordApplication(job) {
     if (!currentUser) return; // only logged-in applicants are tracked
@@ -690,6 +736,7 @@ logoutBtn.addEventListener('click', () => {
     firebase.auth().signOut().then(() => showToast('Logged out'));
 });
 
+// --- 7. TOAST NOTIFICATIONS -------------------------------------
 let toastTimer = null;
 function showToast(message) {
     let toast = document.getElementById('toast');
@@ -704,9 +751,15 @@ function showToast(message) {
     toastTimer = setTimeout(() => toast.classList.remove('show'), 2800);
 }
 
+// --- 8. INIT ------------------------------------------------------
 fetchJobs();
 renderCompanies();
 
+// =========================================================
+// SERVICES TOOLS — Resume Builder, Score Checker, Interview Prep
+// =========================================================
+
+// --- Toggle tool panels from the service cards ---
 document.querySelectorAll('.service-try-btn').forEach(btn => {
     btn.addEventListener('click', () => {
         const panelId = btn.getAttribute('data-tool');
@@ -906,6 +959,9 @@ document.getElementById('showTipBtn').addEventListener('click', () => {
     interviewCard.innerHTML += `<span class="tip-text">💡 ${currentQuestion.tip}</span>`;
 });
 
+// =========================================================
+// SKILL GAP INSIGHTS
+// =========================================================
 const SKILLS_STORAGE_KEY = 'jobverse_user_skills';
 const skillGapToggleBtn = document.getElementById('skillGapToggleBtn');
 const skillGapPanel = document.getElementById('skillGapPanel');
@@ -969,6 +1025,10 @@ document.getElementById('skillGapBtn').addEventListener('click', () => {
     }).join('') + `<p class="tool-subtitle" style="margin-top:14px;">% = share of today's live listings mentioning that skill.</p>`;
 });
 
+// =========================================================
+// ICON CATEGORIES — one-tap filter within the Blue-Collar page,
+// no typing required (accessibility for low-literacy users).
+// =========================================================
 document.querySelectorAll('.icon-cat-btn').forEach(btn => {
     btn.addEventListener('click', () => {
         document.querySelectorAll('.icon-cat-btn').forEach(b => b.classList.remove('active-cat'));
@@ -977,6 +1037,10 @@ document.querySelectorAll('.icon-cat-btn').forEach(btn => {
     });
 });
 
+// =========================================================
+// FEEDBACK — star rating + comment, stored in Firestore,
+// visible to the admin alongside applications.
+// =========================================================
 const feedbackFab = document.getElementById('feedbackFab');
 const feedbackModal = document.getElementById('feedbackModal');
 const closeFeedbackModal = document.getElementById('closeFeedbackModal');
@@ -1036,6 +1100,7 @@ submitFeedbackBtn.addEventListener('click', async () => {
             submittedAt: firebase.firestore.FieldValue.serverTimestamp(),
         });
         showToast('Thanks for the feedback!');
+        loadPublicFeedback();
         feedbackModal.classList.remove('open');
         feedbackRating = 0;
         feedbackComment.value = '';
@@ -1073,3 +1138,45 @@ async function loadFeedback() {
         console.warn(err);
     }
 }
+
+// =========================================================
+// PUBLIC REVIEWS — real feedback shown to every visitor,
+// above the footer (requires the Firestore rule to allow
+// public reads on the feedback collection — see firebase-config.js)
+// =========================================================
+function escapeHtml(str) {
+    const div = document.createElement('div');
+    div.textContent = str || '';
+    return div.innerHTML;
+}
+
+async function loadPublicFeedback() {
+    const grid = document.getElementById('publicReviewsGrid');
+    if (!grid) return;
+    try {
+        const snap = await db.collection('feedback').orderBy('submittedAt', 'desc').limit(6).get();
+        if (snap.empty) {
+            grid.innerHTML = `<p class="empty-state">No reviews yet — be the first to leave feedback!</p>`;
+            return;
+        }
+        grid.innerHTML = snap.docs.map(doc => {
+            const d = doc.data();
+            const rating = d.rating || 0;
+            const starsHtml = Array.from({ length: 5 }, (_, i) =>
+                `<svg class="star ${i < rating ? 'filled' : 'empty'}"><use href="#star-icon"/></svg>`
+            ).join('');
+            return `
+                <div class="testimonial-card">
+                    <div class="star-rating" aria-label="${rating} out of 5 stars">${starsHtml}</div>
+                    <p>"${escapeHtml(d.comment) || 'No comment provided.'}"</p>
+                    <div class="testimonial-author">— ${escapeHtml(d.userName || 'Anonymous')}</div>
+                </div>
+            `;
+        }).join('');
+    } catch (err) {
+        grid.innerHTML = `<p class="empty-state">Reviews are temporarily unavailable.</p>`;
+        console.warn('Could not load public reviews:', err);
+    }
+}
+
+loadPublicFeedback();

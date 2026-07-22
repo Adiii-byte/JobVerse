@@ -755,6 +755,10 @@ footer {
     .logReg .login { display: none; }
 }
 
+/* =========================================================
+   PROFESSIONAL POLISH — added features
+   ========================================================= */
+
 /* HAMBURGER MENU (mobile) */
 .hamburger {
     display: none;
@@ -1014,6 +1018,10 @@ footer {
     .footer-grid { flex-direction: column; gap: 24px; }
 }
 
+/* =========================================================
+   SERVICES TOOLS — Resume Builder, Score Checker, Interview Prep
+   ========================================================= */
+
 .service-try-btn {
     margin-top: 16px;
     background: transparent;
@@ -1237,6 +1245,10 @@ footer {
     }
 }
 
+/* =========================================================
+   SKILL GAP INSIGHTS + NEW JOB ALERTS
+   ========================================================= */
+
 .nav-badge {
     display: inline-block;
     background: #ef4444;
@@ -1331,6 +1343,10 @@ footer {
     .skill-gap-form input { width: 100%; }
 }
 
+/* =========================================================
+   ADMIN APPLICATIONS DASHBOARD
+   ========================================================= */
+
 .applications-wrap {
     max-width: 900px;
     margin: 0 auto;
@@ -1373,12 +1389,19 @@ footer {
     white-space: nowrap;
 }
 
+/* =========================================================
+   VISUAL REFRESH — logo mark, hero signature, nav polish, icons
+   ========================================================= */
+
 /* LOGO MARK */
 .logo-mark {
     display: inline-block;
     vertical-align: -6px;
     margin-right: 6px;
 }
+
+/* logo-mark base positioning is defined earlier; the spinning
+   dot animation from the old orbit design is no longer used. */
 
 /* NAV UNDERLINE */
 .menu a {
@@ -1480,6 +1503,10 @@ button:active {
     .hero-orbit { width: 380px; height: 380px; }
 }
 
+/* =========================================================
+   TESTIMONIAL STAR RATINGS
+   ========================================================= */
+
 .star-rating {
     display: flex;
     gap: 3px;
@@ -1500,6 +1527,11 @@ button:active {
     stroke: var(--menu-link);
     stroke-width: 1.5;
 }
+
+/* =========================================================
+   ICON CATEGORIES + AUDIO LISTEN BUTTON (accessibility for
+   low-literacy users — large tap targets, no typing needed)
+   ========================================================= */
 
 .icon-categories {
     display: flex;
@@ -1540,6 +1572,7 @@ button:active {
     font-size: 26px;
 }
 
+/* LISTEN (text-to-speech) BUTTON on job cards */
 .listen-btn {
     background: transparent;
     border: none;
@@ -1565,6 +1598,10 @@ button:active {
     .icon-cat-btn { min-width: 66px; padding: 10px; }
     .icon-cat-emoji { font-size: 22px; }
 }
+
+/* =========================================================
+   NAV DROPDOWN — "Jobs" menu (Find/Government/Blue-Collar)
+   ========================================================= */
 
 .nav-dropdown {
     position: relative;
@@ -1653,6 +1690,10 @@ button:active {
     }
 }
 
+/* =========================================================
+   FEEDBACK — floating button + modal star picker
+   ========================================================= */
+
 .feedback-fab {
     position: fixed;
     bottom: 24px;
@@ -1691,4 +1732,22 @@ button:active {
         padding: 10px 16px;
         font-size: 13px;
     }
+}
+
+/* =========================================================
+   PUBLIC REVIEWS — real feedback, shown above the footer
+   on every page
+   ========================================================= */
+
+.public-reviews {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 50px 8% 60px;
+}
+
+.public-reviews h2 {
+    font-family: 'Fraunces', serif;
+    font-weight: 600;
+    font-size: 26px;
+    margin-bottom: 24px;
 }
