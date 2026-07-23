@@ -109,14 +109,19 @@ async function fetchFromJobicy() {
         data = await res.json();
     }
 
+    // Jobicy sometimes returns jobIndustry/jobType as a single-element
+    // array (e.g. ["Marketing & Sales"]) instead of a plain string —
+    // normalize both shapes so tags are always strings.
+    const firstOrSelf = (val) => Array.isArray(val) ? val[0] : val;
+
     return data.jobs.map(j => ({
         id: `jobicy-${j.id}`,
         title: j.jobTitle,
         company: j.companyName,
         location: j.jobGeo || "India",
-        type: j.jobType || "Full-time",
+        type: firstOrSelf(j.jobType) || "Full-time",
         mode: "Remote",
-        tags: [j.jobIndustry, j.jobType].filter(Boolean).slice(0, 3),
+        tags: [firstOrSelf(j.jobIndustry), firstOrSelf(j.jobType)].filter(Boolean).slice(0, 3),
         posted: timeAgo(j.pubDate),
         postedRaw: j.pubDate,
         salary: formatSalary(j),
@@ -437,7 +442,7 @@ function filterJobs() {
         const matchesKeyword = !keyword ||
             job.title.toLowerCase().includes(keyword) ||
             job.company.toLowerCase().includes(keyword) ||
-            job.tags.some(t => t.toLowerCase().includes(keyword));
+            job.tags.some(t => String(t).toLowerCase().includes(keyword));
         const matchesLocation = !location ||
             job.location.toLowerCase().includes(location) ||
             (location === 'remote' && job.mode.toLowerCase() === 'remote');
@@ -1150,33 +1155,63 @@ function escapeHtml(str) {
     return div.innerHTML;
 }
 
+const REVIEWS_PAGE_SIZE = 6;
+let lastReviewDoc = null;
+const showMoreReviewsBtn = document.getElementById('showMoreReviewsBtn');
+
+function reviewCardHTML(doc) {
+    const d = doc.data();
+    const rating = d.rating || 0;
+    const starsHtml = Array.from({ length: 5 }, (_, i) =>
+        `<svg class="star ${i < rating ? 'filled' : 'empty'}"><use href="#star-icon"/></svg>`
+    ).join('');
+    return `
+        <div class="testimonial-card">
+            <div class="star-rating" aria-label="${rating} out of 5 stars">${starsHtml}</div>
+            <p>"${escapeHtml(d.comment) || 'No comment provided.'}"</p>
+            <div class="testimonial-author">— ${escapeHtml(d.userName || 'Anonymous')}</div>
+        </div>
+    `;
+}
+
 async function loadPublicFeedback() {
     const grid = document.getElementById('publicReviewsGrid');
     if (!grid) return;
     try {
-        const snap = await db.collection('feedback').orderBy('submittedAt', 'desc').limit(6).get();
+        const snap = await db.collection('feedback').orderBy('submittedAt', 'desc').limit(REVIEWS_PAGE_SIZE).get();
         if (snap.empty) {
             grid.innerHTML = `<p class="empty-state">No reviews yet — be the first to leave feedback!</p>`;
+            showMoreReviewsBtn.style.display = 'none';
             return;
         }
-        grid.innerHTML = snap.docs.map(doc => {
-            const d = doc.data();
-            const rating = d.rating || 0;
-            const starsHtml = Array.from({ length: 5 }, (_, i) =>
-                `<svg class="star ${i < rating ? 'filled' : 'empty'}"><use href="#star-icon"/></svg>`
-            ).join('');
-            return `
-                <div class="testimonial-card">
-                    <div class="star-rating" aria-label="${rating} out of 5 stars">${starsHtml}</div>
-                    <p>"${escapeHtml(d.comment) || 'No comment provided.'}"</p>
-                    <div class="testimonial-author">— ${escapeHtml(d.userName || 'Anonymous')}</div>
-                </div>
-            `;
-        }).join('');
+        grid.innerHTML = snap.docs.map(reviewCardHTML).join('');
+        lastReviewDoc = snap.docs[snap.docs.length - 1];
+        showMoreReviewsBtn.style.display = snap.docs.length === REVIEWS_PAGE_SIZE ? 'inline-block' : 'none';
     } catch (err) {
         grid.innerHTML = `<p class="empty-state">Reviews are temporarily unavailable.</p>`;
+        showMoreReviewsBtn.style.display = 'none';
         console.warn('Could not load public reviews:', err);
     }
 }
+
+showMoreReviewsBtn.addEventListener('click', async () => {
+    if (!lastReviewDoc) return;
+    const grid = document.getElementById('publicReviewsGrid');
+    showMoreReviewsBtn.textContent = 'Loading…';
+    try {
+        const snap = await db.collection('feedback').orderBy('submittedAt', 'desc')
+            .startAfter(lastReviewDoc).limit(REVIEWS_PAGE_SIZE).get();
+        if (!snap.empty) {
+            grid.insertAdjacentHTML('beforeend', snap.docs.map(reviewCardHTML).join(''));
+            lastReviewDoc = snap.docs[snap.docs.length - 1];
+        }
+        showMoreReviewsBtn.style.display = snap.docs.length === REVIEWS_PAGE_SIZE ? 'inline-block' : 'none';
+    } catch (err) {
+        showToast('Could not load more reviews.');
+        console.warn(err);
+    } finally {
+        showMoreReviewsBtn.textContent = 'Show More Reviews';
+    }
+});
 
 loadPublicFeedback();
